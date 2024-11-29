@@ -3,7 +3,7 @@ import type { App } from 'vue'
 const store = createPinia()
 
 // export * from './modules/app'
-// export * from './modules/permission'
+export * from './modules/permission'
 // export * from './modules/settings'
 // export * from './modules/tags-view'
 export * from './modules/user'

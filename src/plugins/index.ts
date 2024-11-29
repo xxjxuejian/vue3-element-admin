@@ -7,7 +7,7 @@ import type { App } from 'vue'
 import { setupRouter } from '@/router'
 import { setupStore } from '@/stores'
 import { setupElIcons } from './icons'
-// import { setupPermission } from "./permission";
+import { setupPermission } from "./permission";
 // import webSocketManager from "@/utils/websocket";
 // import { InstallCodeMirror } from "codemirror-editor-vue3";
 

@@ -32,8 +32,9 @@ export const usePermissionStore = defineStore('permission', () => {
       const dynamicRoutes = transformRoutes(data)
       console.log('dynamicRoutes', dynamicRoutes)
       // 把静态路由和动态路由合并
-      // routes.value = constantRoutes.concat(dynamicRoutes)
-      // isRoutesLoaded.value = true
+      routes.value = constantRoutes.concat(dynamicRoutes)
+      isRoutesLoaded.value = true
+      console.log('全部路由', routes.value)
     })
   }
 

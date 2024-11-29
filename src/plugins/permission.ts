@@ -2,7 +2,7 @@ import type { NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } fro
 import { getToken } from '@/utils/auth'
 import NProgress from '@/utils/nprogress'
 import router from '@/router'
-// import { usePermissionStore, useUserStore } from "@/store";
+import { usePermissionStore, useUserStore } from '@/stores'
 
 export function setupPermission() {
   // 白名单路由，什么是白名单
@@ -23,6 +23,10 @@ export function setupPermission() {
       }
       // 如果去的不是登录页，是其它的页面,要先判断路由有没有加载完成
       else {
+        const permissionStore = usePermissionStore()
+        // 如果路由加载完成，但是没有匹配页面，则跳转到404
+        if (permissionStore.isRoutesLoaded) {
+        }
       }
     }
     // 如果没有登录，判断是不是白名单路由，是白名单路由，也可以通过
