@@ -24,7 +24,7 @@ export default {
     // Element-plus图标
     setupElIcons(app)
     // 路由守卫
-    // setupPermission();
+    setupPermission();
     // 初始化 WebSocket
     // webSocketManager.setupWebSocket();
     // 注册 CodeMirror

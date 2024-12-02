@@ -1,7 +1,8 @@
 import type { RouteRecordRaw } from 'vue-router'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { constantRoutes } from '@/router'
+import router, { constantRoutes } from '@/router'
+
 import { store } from '@/stores'
 
 import MenuAPI, { type RouteVO } from '@/api/system/menu'
@@ -27,15 +28,34 @@ export const usePermissionStore = defineStore('permission', () => {
    * 生成动态路由
    */
   function generateRoutes() {
-    MenuAPI.getRoutes().then((data: any) => {
-      console.log('data', data)
-      const dynamicRoutes = transformRoutes(data)
-      console.log('dynamicRoutes', dynamicRoutes)
-      // 把静态路由和动态路由合并
-      routes.value = constantRoutes.concat(dynamicRoutes)
-      isRoutesLoaded.value = true
-      console.log('全部路由', routes.value)
+    console.log('生成动态路由')
+    return new Promise<RouteRecordRaw[]>((resolve, reject) => {
+      MenuAPI.getRoutes().then((data: any) => {
+        console.log('data', data)
+        const dynamicRoutes = transformRoutes(data)
+        console.log('dynamicRoutes', dynamicRoutes)
+        // 把静态路由和动态路由合并
+        // 需要保存全部路由
+        routes.value = constantRoutes.concat(dynamicRoutes)
+        isRoutesLoaded.value = true
+        console.log('全部路由', routes.value)
+
+        resolve(dynamicRoutes)
+      })
     })
+  }
+
+  /**
+   * 重置路由
+   */
+  function resetRoutes() {
+    // 删除动态路由，保留静态路由
+    // 从router对象，路由对象中删除动态路由
+    routes.value.forEach((route) => {})
+
+    // 重置路由加载状态
+    routes.value = []
+    isRoutesLoaded.value = false
   }
 
   return {

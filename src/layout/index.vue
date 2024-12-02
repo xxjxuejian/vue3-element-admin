@@ -1,13 +1,14 @@
 <!-- 模板页 一个侧边栏，一个顶部-->
 <script setup>
-import { usePermissionStore } from '@/stores/modules/permission'
-const permissionStore = usePermissionStore()
-console.log('permissionStore')
-permissionStore.generateRoutes()
+// import { usePermissionStore } from '@/stores/modules/permission'
+// const permissionStore = usePermissionStore()
+// console.log('permissionStore')
+// permissionStore.generateRoutes()
 </script>
 
 <template>
   <div class="wh-full">
+    <h1>Layout模板</h1>
     <router-view></router-view>
   </div>
 </template>
