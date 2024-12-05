@@ -3,6 +3,7 @@ import { RouteRecordRaw } from 'vue-router'
 import SidebarMenuItemTitle from './SidebarMenuItemTitle.vue'
 import { isExternal } from '@/utils'
 import path from 'path-browserify'
+import { title } from 'process'
 
 const props = defineProps({
   /**
@@ -37,7 +38,7 @@ function resolvePath(routePath: string) {
   return path.join(props.basePath, routePath)
 }
 
-const routePath = resolvePath(props.routeItem.path)
+// const routePath = resolvePath(props.routeItem.path)
 </script>
 
 <template>
@@ -45,41 +46,45 @@ const routePath = resolvePath(props.routeItem.path)
    没有routeItem.children 说明到达了最底层菜单，同时routeItem.meta.hidden  要为false，才能显示
     -->
 
-  <!-- 首先是这个菜单项是可以显示的， -->
-  <template v-if="!routeItem.meta?.hidden">
-    <!-- 如果是最底层菜单，那么就显示菜单项 -->
+  <!-- 首先是针对根路径做处理 /  -->
+  <template v-if="routeItem.path === '/'">
+    <RouterLink to="/">
+      <el-menu-item>
+        <SidebarMenuItemTitle title="首页" icon="el-icon-home"> </SidebarMenuItemTitle>
+      </el-menu-item>
+    </RouterLink>
+  </template>
 
-    <template v-if="!routeItem.children">
-      <RouterLink :to="resolvePath(routeItem.path)">
-        <el-menu-item>
-          <SidebarMenuItemTitle
-            :title="resolvePath(routeItem.path)"
-            :icon="routeItem.meta?.icon"
-          ></SidebarMenuItemTitle>
-        </el-menu-item>
-      </RouterLink>
-    </template>
-
-    <!-- 如果 还有子级菜单，递归显示-->
-    <template v-else>
-      <!-- 针对/ 特殊处理，遇到path === '/'的路由，直接显示一层，不继续递归了 -->
-      <template v-if="routeItem.path === '/'">
-        <el-menu-item>
-          <template #title>
-            <el-icon><HomeFilled /></el-icon>
-            <span>首页</span>
-          </template>
-        </el-menu-item>
+  <!-- 不是根路径再接着处理 -->
+  <template v-else>
+    <!-- 如果meta信息中是hidden,则不显示，只显示hidden为false的菜单项 -->
+    <template v-if="!routeItem.meta?.hidden">
+      <!-- 判断是不是最底层菜单，是底层菜单就直接显示，那么就显示菜单项 -->
+      <template v-if="!routeItem.children">
+        <!-- 如果是外部链接，不能使用 router-link，是使用a 链接，
+        这里要使用一个动态组件 AppLink
+        -->
+        <RouterLink :to="resolvePath(routeItem.path)">
+          <el-menu-item>
+            <SidebarMenuItemTitle
+              :title="resolvePath(routeItem.path)"
+              :icon="routeItem.meta?.icon"
+            ></SidebarMenuItemTitle>
+          </el-menu-item>
+        </RouterLink>
       </template>
 
-      <!-- 其它的继续递归 -->
+      <!-- 不是底层菜单，还有子级菜单，有children属性，需要el-sub-menu -->
       <template v-else>
         <el-sub-menu :index="routeItem.path">
           <template #title>
-            <SidebarMenuItemTitle :title="routeItem.path" :icon="routeItem.meta?.icon"></SidebarMenuItemTitle>
+            <SidebarMenuItemTitle
+              :title="resolvePath(routeItem.path)"
+              :icon="routeItem.meta?.icon"
+            ></SidebarMenuItemTitle>
           </template>
           <template v-for="item in routeItem.children" :key="item.path">
-            <SidebarMenuItem :route-item="item" :base-path="routeItem.path" />
+            <SidebarMenuItem :route-item="item" :base-path="resolvePath(routeItem.path)" />
           </template>
         </el-sub-menu>
       </template>

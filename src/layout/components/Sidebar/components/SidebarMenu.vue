@@ -1,20 +1,43 @@
 <script setup lang="ts">
-import { usePermissionStore } from '@/stores'
 import { computed } from 'vue'
+import { isExternal } from '@/utils'
+import path from 'path-browserify'
 import SidebarMenuItem from './SidebarMenuItem.vue'
 
-const permissionStore = usePermissionStore()
-console.log(permissionStore.routes)
+const props = defineProps({
+  menuList: {
+    type: Array<any>,
+    required: true,
+    default: () => [],
+  },
+  basePath: {
+    type: String,
+    required: true,
+    example: '/system',
+    default: '',
+  },
+})
 
+console.log('props.menuList', props.menuList)
 
+// 每次向下层转递路径时，判断是不是一个外部链接，如果是，就直接原封不动的向下传递，
+// 如果不是，就拼接父级路径和当前路径，再向下传递
+function resolveFullPath(routePath: string) {
+  // 如果传递过来的父级路径是外部链接，就直接原封不动的向下传递
+  if (isExternal(props.basePath)) return props.basePath
+  // 如果父级路径不是外部链接，但是当前路由的路径是外部链接，就直接返回当前路由的路径
+  if (isExternal(routePath)) return routePath
 
-
+  // 如果都不是，就拼接父级路径和当前路径
+  console.log(path.resolve(props.basePath, routePath))
+  return path.resolve(props.basePath, routePath)
+}
+resolveFullPath('/system/user')
 </script>
 
 <template>
   <el-menu default-active="1" class="el-menu-vertical-demo" :unique-opened="true">
-    <SidebarMenuItem v-for="item in permissionStore.routes" :key="item.path" :route-item="item" :base-path="item.path">
-    </SidebarMenuItem>
+    <SidebarMenuItem v-for="route in menuList" :key="route.path" :route-item="route" base-path=""> </SidebarMenuItem>
   </el-menu>
 </template>
 
