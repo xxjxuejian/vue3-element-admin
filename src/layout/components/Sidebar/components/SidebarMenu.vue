@@ -3,9 +3,12 @@ import path from 'path-browserify'
 import SidebarMenuItem from './SidebarMenuItem.vue'
 import { useRoute } from 'vue-router'
 import { isExternal } from '@/utils'
+import { useAppStore } from '@/stores'
 import variables from '@/styles/variables.module.scss'
 
 const currentRoute = useRoute()
+const appStore = useAppStore()
+
 console.log('currentRoute', currentRoute)
 const props = defineProps({
   menuList: {
@@ -39,7 +42,12 @@ resolveFullPath('/system/user')
 </script>
 
 <template>
-  <el-menu :default-active="currentRoute.path" class="el-menu-vertical-demo" :unique-opened="true" :collapse="false">
+  <el-menu
+    :default-active="currentRoute.path"
+    class="el-menu-vertical-demo"
+    :unique-opened="true"
+    :collapse="!appStore.sidebar.opened"
+  >
     <SidebarMenuItem v-for="route in menuList" :key="route.path" :route-item="route" base-path=""> </SidebarMenuItem>
   </el-menu>
 </template>

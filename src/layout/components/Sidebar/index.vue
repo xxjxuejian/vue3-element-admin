@@ -1,10 +1,14 @@
 <script setup>
+import { computed } from 'vue'
 import SidebarLogo from './components/SidebarLogo.vue'
 import SidebarMenu from './components/SidebarMenu.vue'
 
-import { usePermissionStore } from '@/stores'
+import { usePermissionStore, useAppStore } from '@/stores'
 const permissionStore = usePermissionStore()
-// console.log(permissionStore.routes)
+const appStore = useAppStore()
+
+const isSidebarCollapsed = computed(() => !appStore.sidebar.opened)
+
 // 递归处理路由,解决path不正确问题.// routes是一个数组
 function recurRoutes(routes, parentPath = '') {
   for (let i = 0; i < routes.length; i++) {
@@ -28,7 +32,7 @@ console.log('index,menu-list', permissionStore.routes)
 
 <template>
   <div>
-    <SidebarLogo />
+    <SidebarLogo :collapse="isSidebarCollapsed" />
     <el-scrollbar>
       <SidebarMenu :menu-list="permissionStore.routes" base-path="" />
     </el-scrollbar>

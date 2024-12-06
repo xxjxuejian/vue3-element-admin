@@ -23,6 +23,7 @@ declare module 'vue' {
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElText: typeof import('element-plus/es')['ElText']
+    Hamburger: typeof import('./src/components/Hamburger/index.vue')['default']
     IEpInfoFilled: typeof import('~icons/ep/info-filled')['default']
     IEpSuccessFilled: typeof import('~icons/ep/success-filled')['default']
     IEpWarningFilled: typeof import('~icons/ep/warning-filled')['default']
