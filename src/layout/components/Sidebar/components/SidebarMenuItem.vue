@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouteRecordRaw } from 'vue-router'
 import SidebarMenuItemTitle from './SidebarMenuItemTitle.vue'
+import AppLink from '@/components/AppLink/index.vue'
 import { isExternal } from '@/utils'
 import path from 'path-browserify'
 import { title } from 'process'
@@ -50,7 +51,7 @@ function resolvePath(routePath: string) {
   <template v-if="routeItem.path === '/'">
     <RouterLink to="/">
       <el-menu-item>
-        <SidebarMenuItemTitle title="首页" icon="el-icon-home"> </SidebarMenuItemTitle>
+        <SidebarMenuItemTitle title="首页" icon="el-icon-HomeFilled"> </SidebarMenuItemTitle>
       </el-menu-item>
     </RouterLink>
   </template>
@@ -64,24 +65,18 @@ function resolvePath(routePath: string) {
         <!-- 如果是外部链接，不能使用 router-link，是使用a 链接，
         这里要使用一个动态组件 AppLink
         -->
-        <RouterLink :to="resolvePath(routeItem.path)">
+        <AppLink :to="resolvePath(routeItem.path)">
           <el-menu-item>
-            <SidebarMenuItemTitle
-              :title="resolvePath(routeItem.path)"
-              :icon="routeItem.meta?.icon"
-            ></SidebarMenuItemTitle>
+            <SidebarMenuItemTitle :title="routeItem.meta?.title" :icon="routeItem.meta?.icon"></SidebarMenuItemTitle>
           </el-menu-item>
-        </RouterLink>
+        </AppLink>
       </template>
 
       <!-- 不是底层菜单，还有子级菜单，有children属性，需要el-sub-menu -->
       <template v-else>
         <el-sub-menu :index="routeItem.path">
           <template #title>
-            <SidebarMenuItemTitle
-              :title="resolvePath(routeItem.path)"
-              :icon="routeItem.meta?.icon"
-            ></SidebarMenuItemTitle>
+            <SidebarMenuItemTitle :title="routeItem.meta?.title" :icon="routeItem.meta?.icon"></SidebarMenuItemTitle>
           </template>
           <template v-for="item in routeItem.children" :key="item.path">
             <SidebarMenuItem :route-item="item" :base-path="resolvePath(routeItem.path)" />
@@ -92,4 +87,4 @@ function resolvePath(routePath: string) {
   </template>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss"></style>

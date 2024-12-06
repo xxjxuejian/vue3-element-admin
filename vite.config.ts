@@ -59,6 +59,10 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           // 这段代码表示在每个 SCSS 文件的顶部，都会自动添加以下内容：
           // @use用于引入其他 SCSS 文件， 的优势是引入的内容不会直接污染全局命名空间。
           additionalData: `@use "@/styles/variables.scss" as *;`,
+
+          // 解决legacy-js-api警告问题
+          api: 'modern-compiler',
+          // silenceDeprecations: ['legacy-js-api'],
         },
       },
     },

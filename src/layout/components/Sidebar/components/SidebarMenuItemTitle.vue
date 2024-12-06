@@ -25,6 +25,8 @@ const props = defineProps({
 
   <!-- 没有传递icon,给一个默认的icon -->
   <SvgIcon v-else icon-class="menu"></SvgIcon>
+
+  <!-- 文本 -->
   <span v-if="title">{{ title }}</span>
 </template>
 
@@ -34,14 +36,4 @@ const props = defineProps({
   margin-right: 0 !important;
   color: currentcolor;
 }
-
-// .hideSidebar {
-//   .el-sub-menu,
-//   .el-menu-item {
-//     .svg-icon,
-//     .sub-el-icon {
-//       margin-left: 20px;
-//     }
-//   }
-// }
 </style>

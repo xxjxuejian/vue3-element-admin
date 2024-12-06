@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { isExternal } from '@/utils'
 import path from 'path-browserify'
 import SidebarMenuItem from './SidebarMenuItem.vue'
+import { useRoute } from 'vue-router'
+import { isExternal } from '@/utils'
+import variables from '@/styles/variables.module.scss'
 
+const currentRoute = useRoute()
+console.log('currentRoute', currentRoute)
 const props = defineProps({
   menuList: {
     type: Array<any>,
@@ -18,7 +21,7 @@ const props = defineProps({
   },
 })
 
-console.log('props.menuList', props.menuList)
+// console.log('props.menuList', props.menuList)
 
 // 每次向下层转递路径时，判断是不是一个外部链接，如果是，就直接原封不动的向下传递，
 // 如果不是，就拼接父级路径和当前路径，再向下传递
@@ -36,7 +39,7 @@ resolveFullPath('/system/user')
 </script>
 
 <template>
-  <el-menu default-active="1" class="el-menu-vertical-demo" :unique-opened="true">
+  <el-menu :default-active="currentRoute.path" class="el-menu-vertical-demo" :unique-opened="true" :collapse="false">
     <SidebarMenuItem v-for="route in menuList" :key="route.path" :route-item="route" base-path=""> </SidebarMenuItem>
   </el-menu>
 </template>

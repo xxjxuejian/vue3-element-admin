@@ -4,21 +4,26 @@ import SidebarMenu from './components/SidebarMenu.vue'
 
 import { usePermissionStore } from '@/stores'
 const permissionStore = usePermissionStore()
-console.log(permissionStore.routes)
+// console.log(permissionStore.routes)
+// 递归处理路由,解决path不正确问题.// routes是一个数组
+function recurRoutes(routes, parentPath = '') {
+  for (let i = 0; i < routes.length; i++) {
+    let cur = routes[i]
+    let path = cur.path
 
-// 菜单处理,/function内部有一个路由的path有问题，这里可以写成递归，更加通用
-permissionStore.routes.forEach((item) => {
-  if (item.path === '/function') {
-    item.children.forEach((item) => {
-      if (item.path.startsWith('/function')) {
-        console.log(item)
-        item.path = item.path.replace('/function/', '')
-        console.log(item)
-      }
-    })
+    if (cur.children && cur.children.length > 0) {
+      // 检查route是否需要递归
+      recurRoutes(cur.children, path)
+    }
+
+    // 如果当前的路由中含有父级路径,要把父级路径剔除掉
+    if (parentPath !== '' && path.startsWith(parentPath)) {
+      cur.path = path.replace(new RegExp(`^${parentPath}/?`), '')
+    }
   }
-})
-// console.log('index,menu-list', permissionStore.routes)
+}
+recurRoutes(permissionStore.routes)
+console.log('index,menu-list', permissionStore.routes)
 </script>
 
 <template>
