@@ -15,6 +15,9 @@ function recurRoutes(routes, parentPath = '') {
     let cur = routes[i]
     let path = cur.path
 
+    if (path === '/') {
+      cur.meta = { ...cur.meta, title: '首页' }
+    }
     if (cur.children && cur.children.length > 0) {
       // 检查route是否需要递归
       recurRoutes(cur.children, path)

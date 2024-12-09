@@ -46,7 +46,11 @@ resolveFullPath('/system/user')
     :default-active="currentRoute.path"
     class="el-menu-vertical-demo"
     :unique-opened="true"
+    :collapse-transition="false"
     :collapse="!appStore.sidebar.opened"
+    :background-color="variables['menu-background']"
+    :text-color="variables['menu-text']"
+    :active-text-color="variables['menu-active-text']"
   >
     <SidebarMenuItem v-for="route in menuList" :key="route.path" :route-item="route" base-path=""> </SidebarMenuItem>
   </el-menu>

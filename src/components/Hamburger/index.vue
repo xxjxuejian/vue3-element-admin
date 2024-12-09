@@ -14,7 +14,10 @@ function toggleClick() {
 </script>
 
 <template>
-  <div @click="toggleClick" class="px-[15px] flex justify-center items-center color-[var(--el-text-color-regular)]">
+  <div
+    @click="toggleClick"
+    class="px-[15px] flex justify-center items-center color-[var(--el-text-color-regular)] bg-amber"
+  >
     <svg-icon icon-class="collapse" :class="{ hamburger: true, 'is-active': isActive }" />
   </div>
 </template>

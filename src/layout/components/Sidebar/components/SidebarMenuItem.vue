@@ -51,7 +51,7 @@ function resolvePath(routePath: string) {
   <template v-if="routeItem.path === '/'">
     <RouterLink to="/">
       <el-menu-item>
-        <SidebarMenuItemTitle title="首页" icon="el-icon-HomeFilled"> </SidebarMenuItemTitle>
+        <SidebarMenuItemTitle :title="routeItem.meta?.title" icon="el-icon-HomeFilled"> </SidebarMenuItemTitle>
       </el-menu-item>
     </RouterLink>
   </template>
@@ -87,4 +87,61 @@ function resolvePath(routePath: string) {
   </template>
 </template>
 
-<style scoped lang="scss"></style>
+<style lang="scss">
+.hideSidebar {
+  .submenu-title-noDropdown {
+    position: relative;
+    padding: 0 !important;
+
+    .el-tooltip {
+      padding: 0 !important;
+
+      .sub-el-icon {
+        margin-left: 19px;
+      }
+    }
+
+    & > span {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      visibility: hidden;
+    }
+  }
+
+  .el-sub-menu {
+    overflow: hidden;
+
+    & > .el-sub-menu__title {
+      padding: 0 !important;
+
+      .sub-el-icon {
+        margin-left: 19px;
+      }
+
+      .el-sub-menu__icon-arrow {
+        display: none;
+      }
+    }
+  }
+
+  .el-menu--collapse {
+    width: $sidebar-width-collapsed;
+
+    .el-sub-menu {
+      & > .el-sub-menu__title > span {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        visibility: hidden;
+      }
+    }
+  }
+}
+
+.el-menu-item:hover {
+  background-color: $menu-hover;
+}
+</style>
