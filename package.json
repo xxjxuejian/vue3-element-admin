@@ -1,5 +1,5 @@
 {
-  "name": "vue3-element-admin",
+  "name": "vue3-element-admin-pkg-name",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -20,6 +20,7 @@
     "pinia": "^2.2.6",
     "qs": "^6.13.1",
     "vue": "^3.5.12",
+    "vue-i18n": "^11.0.1",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
@@ -45,5 +46,10 @@
     "vite": "^5.4.10",
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-vue-devtools": "^7.5.4"
-  }
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "徐雪健-有来开源组织",
+  "license": "MIT"
 }

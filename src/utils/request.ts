@@ -37,6 +37,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     // 如果响应是二进制流，则直接返回，用于下载文件、Excel 导出等
+    // 这种类型不能return response.data
     if (response.config.responseType === 'blob') {
       return response
     }
@@ -78,7 +79,7 @@ service.interceptors.response.use(
 // 导出 axios 实例
 export default service
 
-// 刷新 Token 的锁
+// 刷新 Token 的锁,表示是否正在刷新token
 let isRefreshing = false
 // 因 Token 过期导致失败的请求队列
 let requestsQueue: Array<() => void> = []
@@ -95,6 +96,9 @@ async function handleTokenRefresh(config: InternalAxiosRequestConfig) {
     // 这是函数定义,不是执行
     const requestCallback = () => {
       config.headers.Authorization = getToken()
+      // service(config)是用Axios 实例来发起请求，这个实例已经有了一些预设配置，config是这个失败的请求的配置，
+      // 这样相当于再次发送了一个同样的请求
+      // 但是这里知识函数的定义，并没有实际再次请求一次
       resolve(service(config))
     }
     requestsQueue.push(requestCallback)

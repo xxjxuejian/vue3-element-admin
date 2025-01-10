@@ -11,6 +11,9 @@ export * from './modules/user'
 export { store }
 
 // 全局注册 store
+console.log('setupStore外部')
 export function setupStore(app: App<Element>) {
   app.use(store)
+  console.log('setupStore内部：app.use(store)')
 }
+console.log('store注册了外部', store)

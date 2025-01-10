@@ -4,7 +4,6 @@ import SidebarMenuItemTitle from './SidebarMenuItemTitle.vue'
 import AppLink from '@/components/AppLink/index.vue'
 import { isExternal } from '@/utils'
 import path from 'path-browserify'
-import { title } from 'process'
 
 const props = defineProps({
   /**

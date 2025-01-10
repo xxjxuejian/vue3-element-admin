@@ -12,6 +12,14 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
+import { name, version, engines, dependencies, devDependencies } from './package.json'
+
+// 平台的名称、版本、运行所需的 node 版本、依赖、构建时间的类型提示
+const __APP_INFO__ = {
+  pkg: { name, version, engines, dependencies, devDependencies },
+  buildTimestamp: Date.now(),
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -21,7 +29,10 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       vue(),
       vueDevTools(),
       AutoImport({
+        // 导入 Vue 函数，如：ref, reactive, toRef 等
+        imports: ['vue', '@vueuse/core', 'pinia', 'vue-router'],
         resolvers: [
+          // 导入 Element Plus函数，如：ElMessage, ElMessageBox 等
           ElementPlusResolver(),
           IconsResolver({
             prefix: 'Icon',
@@ -30,6 +41,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       }),
       Components({
         resolvers: [
+          // 导入 Element Plus 组件
           ElementPlusResolver(),
           IconsResolver({
             enabledCollections: ['ep'],
@@ -79,6 +91,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           rewrite: (path) => path.replace(new RegExp('^' + env.VITE_APP_BASE_API), ''),
         },
       },
+    },
+    define: {
+      __APP_INFO__: JSON.stringify(__APP_INFO__),
     },
   }
 })

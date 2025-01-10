@@ -1,5 +1,6 @@
 <script setup>
 import Hamburger from '@/components/Hamburger/index.vue'
+import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import { useAppStore } from '@/stores'
 import { computed } from 'vue'
 const appStore = useAppStore()
@@ -18,6 +19,7 @@ function toggleSideBar() {
   <div class="navbar">
     <div class="navbar__left">
       <Hamburger @toggle-click="toggleSideBar" :isActive="isSidebarOpened"></Hamburger>
+      <Breadcrumb></Breadcrumb>
     </div>
   </div>
 </template>

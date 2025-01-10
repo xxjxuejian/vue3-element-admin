@@ -35,6 +35,16 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/dashboard/index.vue'),
         meta: { title: 'dashboard', icon: 'homepage', affix: true, keepAlive: true },
       },
+      {
+        path: '401',
+        component: () => import('@/views/error/401.vue'),
+        meta: { hidden: true },
+      },
+      {
+        path: '404',
+        component: () => import('@/views/error/404.vue'),
+        meta: { hidden: true },
+      },
     ],
   },
 ]
@@ -46,7 +56,11 @@ const router = createRouter({
 })
 // console.log('router', router.install)
 
-// 全局注册 router,什么意思？作为插件注册
+/*
+全局注册 router,就是
+createApp(App).use(router).mount('#app')
+只不过把他封装成了一个函数，然后暴露出去，可以直接调用
+*/
 export function setupRouter(app: App<Element>) {
   app.use(router)
 }
