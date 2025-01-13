@@ -1,7 +1,8 @@
 // 这个文件是系统设置的文件，给用户设置系统的主题等设置的
-
+// @ts-nocheck
 import defaultSettings from '@/settings'
 import { ThemeEnum } from '@/enums/ThemeEnum'
+import { generateThemeColors, applyTheme, toggleDarkMode } from '@/utils/theme'
 
 type SettingsValue = boolean | string
 
@@ -28,10 +29,51 @@ export const useSettingsStore = defineStore('setting', () => {
     [theme, themeColor],
     ([newTheme, newThemeColor]) => {
       console.log('主题变化', [newTheme, newThemeColor])
-      // toggleDarkMode(newTheme === ThemeEnum.DARK)
-      // const colors = generateThemeColors(newThemeColor)
-      // applyTheme(colors)
+      toggleDarkMode(newTheme === ThemeEnum.DARK)
+      const colors = generateThemeColors(newThemeColor)
+      // const colors = generateThemeColors('#C30F11')
+      applyTheme(colors)
     },
     { immediate: true },
   )
+
+  // 设置更改函数
+  const settingsMap: Record<string, Ref<SettingsValue>> = {
+    fixedHeader,
+    tagsView,
+    sidebarLogo,
+    layout,
+    watermarkEnabled,
+  }
+  function changeSetting({ key, value }: { key: string; value: SettingsValue }) {
+    const setting = settingsMap[key]
+    if (setting) setting.value = value
+  }
+
+  function changeTheme(val: string) {
+    theme.value = val
+  }
+
+  function changeThemeColor(color: string) {
+    themeColor.value = color
+  }
+
+  function changeLayout(val: string) {
+    layout.value = val
+  }
+
+  return {
+    settingsVisible,
+    tagsView,
+    fixedHeader,
+    sidebarLogo,
+    layout,
+    themeColor,
+    theme,
+    watermarkEnabled,
+    changeSetting,
+    changeTheme,
+    changeThemeColor,
+    changeLayout,
+  }
 })

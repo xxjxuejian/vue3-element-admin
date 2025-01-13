@@ -5,12 +5,12 @@ import zhCnLocale from './package/zh-cn'
 import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { useAppStoreHook, useAppStore } from '@/stores/modules/app'
-
+// import { store } from '@/stores'
 /*
 这个文件是
 */
 
-// const appStore = useAppStore()
+// const appStore = useAppStore(store)
 const appStore = useAppStoreHook()
 const messages = {
   'zh-cn': {

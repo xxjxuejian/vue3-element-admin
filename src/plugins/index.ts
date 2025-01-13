@@ -2,10 +2,16 @@
 
 import type { App } from 'vue'
 
+/*
+这些全部都是处于模块加载阶段，模块内部的顶层代码会被执行，但是内部定义的函数都不会立即执行
+在这些导入代码中，都还没有创建pinia实例，即没有执行app.use(pinia)， pinia 还没有安装
+所以内部想到使用store的代码，比如const appStore = useAppStore()  等代码都不能正常执行
+那么在这些文件中，如果确实需要使用store，怎么办？
+*/
 // import { setupDirective } from "@/directive";
+import { setupStore } from '@/stores'
 import { setupI18n } from '@/lang'
 import { setupRouter } from '@/router'
-import { setupStore } from '@/stores'
 import { setupElIcons } from './icons'
 import { setupPermission } from './permission'
 // import webSocketManager from "@/utils/websocket";

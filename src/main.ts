@@ -1,6 +1,10 @@
 // src/main.ts
-import 'virtual:uno.css'
+// main.ts
+import 'element-plus/theme-chalk/dark/css-vars.css'
+import '@/styles/dark/css-vars.css'
 import '@/styles/index.scss'
+import 'virtual:uno.css'
+import 'animate.css'
 import 'virtual:svg-icons-register' //iconfont图标配置
 
 import { createApp } from 'vue'

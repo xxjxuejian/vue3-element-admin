@@ -5,6 +5,7 @@ import { computed } from 'vue'
 
 const appStore = useAppStore()
 const locale = computed(() => appStore.locale)
+const watermarkEnabled = ref(false)
 </script>
 
 <template>
@@ -20,7 +21,7 @@ const locale = computed(() => appStore.locale)
     </el-watermark>
 
     <router-view v-else /> -->
-    <login></login>
+    <router-view></router-view>
   </el-config-provider>
 </template>
 

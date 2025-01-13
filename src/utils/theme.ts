@@ -36,6 +36,7 @@ export function generateThemeColors(primary: string) {
   // 生成深色变体
   colors['primary-dark-2'] = adjustBrightness(primary, -0.2)
 
+  console.log('colors', colors)
   return colors
 }
 
@@ -44,6 +45,7 @@ export function applyTheme(colors: Record<string, string>) {
 
   Object.entries(colors).forEach(([key, value]) => {
     el.style.setProperty(`--el-color-${key}`, value)
+    console.log('change el-color')
   })
 }
 

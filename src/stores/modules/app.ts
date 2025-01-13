@@ -1,4 +1,3 @@
-import { useAppStore } from '@/stores/modules/app'
 import defaultSettings from '@/settings'
 
 // 导入 Element Plus 中英文语言包
@@ -78,8 +77,8 @@ export const useAppStore = defineStore('app', () => {
  */
 
 // 上面都只是定义逻辑，需要导出一个方法，用于在组件外部使用 Pinia Store
-// 调用这个方法就相当于创建了AppStore，这样外部就可以使用AppStore内的数据或者方法了
+// 由于此时pinia实例还没有创建，需要手动把这个pinia实例传递给useStore()函数
+// 这就要求在之前的文件中有导出的pinia实例，在这里导入，然后 useAppStore(store)传递这个pinia实例
 export function useAppStoreHook() {
-  // 这就是相当于const appStore = useAppStore，在创建app的store
   return useAppStore(store)
 }

@@ -8,6 +8,7 @@ const { pkg } = __APP_INFO__
 
 // 检查用户的操作系统是否使用深色模式
 const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)')
+console.log('mediaQueryList', mediaQueryList)
 
 const defaultSettings: AppSettings = {
   // 系统Title
@@ -37,5 +38,5 @@ const defaultSettings: AppSettings = {
   // 水印内容
   watermarkContent: pkg.name,
 }
-
+console.log('defaultSettings', defaultSettings)
 export default defaultSettings
