@@ -17,6 +17,7 @@ export const useUserStore = defineStore('user', () => {
       AuthAPI.login(loginData)
         .then((data) => {
           const { tokenType, accessToken, refreshToken } = data
+          // 把设置token的逻辑放在login中，每次产生登录操作都设置一次token，这也是符合逻辑的。
           setToken(tokenType + ' ' + accessToken) // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx,存储到localStorage中
           setRefreshToken(refreshToken)
           resolve(data)
@@ -41,7 +42,7 @@ export const useUserStore = defineStore('user', () => {
             return
           }
           Object.assign(userInfo.value, data)
-          resolve(data) //这里为什么需要resolve(data),上面都没有resolve数据
+          resolve(data)
         })
         .catch((err) => {
           reject(err)

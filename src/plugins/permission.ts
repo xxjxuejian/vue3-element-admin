@@ -19,7 +19,7 @@ export function setupPermission() {
     if (isLogin) {
       // 如果去的页面是login页面，则跳转到首页（登录以后不让去登陆页面）
       if (to.path === '/login') {
-        next({ path: '/' })
+        next({ path: '/test' })
         // router.push({ path: '/' })
       }
       // 如果去的不是登录页，是其它的页面,要先判断路由有没有加载完成
@@ -72,6 +72,7 @@ export function setupPermission() {
         console.log('未登录，被路由拦截器拦截，重定向到登录页')
         // 不在白名单，重定向到登录页
         // redirectToLogin(to, next)
+        router.push({ path: '/' })
         NProgress.done()
       }
     }
@@ -81,4 +82,12 @@ export function setupPermission() {
   router.afterEach(() => {
     NProgress.done()
   })
+}
+
+// 重定向到登录页
+function redirectToLogin(to: RouteLocationNormalized, next: NavigationGuardNext) {
+  const params = new URLSearchParams(to.query as Record<string, string>)
+  const queryString = params.toString()
+  const redirect = queryString ? `${to.path}?${queryString}` : to.path
+  next(`/login?redirect=${encodeURIComponent(redirect)}`)
 }

@@ -21,6 +21,11 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/test',
+    component: () => import('@/components/Test/index.vue'),
+    meta: { hidden: true },
+  },
 
   // 进入到/路径时，会首先渲染layout组件，再渲染dashboard组件
   {

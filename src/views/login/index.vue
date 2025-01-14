@@ -3,9 +3,12 @@ import { type LoginData } from '@/api/auth'
 import type { FormInstance } from 'element-plus'
 import { ThemeEnum } from '@/enums/ThemeEnum'
 
-import { useSettingsStore, useUserStore, useDictStore } from '@/stores'
-const settingsStore = useSettingsStore()
+import { useSettingsStore, useUserStore, useDictStore } from '@/stores' //这里面有所有的store
+import AuthAPI from '@/api/auth/index'
+import router from '@/router'
 
+const settingsStore = useSettingsStore()
+const userStore = useUserStore()
 const { t } = useI18n()
 const isDark = ref(false)
 const toggleTheme = (val: boolean | string | number) => {
@@ -23,10 +26,81 @@ const loginData = ref<LoginData>({
   captchaKey: '',
   captchaCode: '',
 })
+// 表单验证规则，使用计算属性是因为，如果切换了语言，验证的提示信息也需要切换
+const loginRules = computed(() => {
+  return {
+    username: [{ required: true, trigger: 'blur', message: t('login.message.username.required') }],
+    password: [
+      {
+        required: true,
+        trigger: 'blur',
+        message: t('login.message.password.required'),
+      },
+      {
+        min: 6,
+        message: t('login.message.password.min'),
+        trigger: 'blur',
+      },
+    ],
+    captchaCode: [
+      {
+        required: true,
+        trigger: 'blur',
+        message: t('login.message.captchaCode.required'),
+      },
+    ],
+  }
+})
 
-const captchaBase64 = ref(
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAAoCAYAAAA16j4lAAAEAklEQVR4Xu2Zy2sTQRzHxT/Bm3+AoFcvvuoT6qMKior4QkVFD6IHwZsnUYpgiEpbn1VRtKBVD15810O14sG3HlKsNGkSbTZJk901m+xmf+6Mtu78NmmzMcbMMB/4QrL5zRzy2Xns7CSQCM0kfEEiFlKw4EjBgiMFC44ULDhSsOBIwYIjBQuOFCw4JQUXrBCktSDE01sgojRDWJkP0dQa+DayF0b0Tuf3r7gJl1if42AEe0DfdR3U5e2gLjgJ2flB+lnfeR1ygadgfYrjZlzBCLbtPCjqURhMzHYya9xwTdGGXOtDyM4JVJTcsQfO3VDEvXCBS7AF30f2eUSWSz2ZOv3+WGqBceWlR+JEIW14ZExwWu9gBA4lW0DN3QHTioENpnMDK2AUPkBGvwax1FZ3H/8ULBV/rwZt3UVGnr77BpivI2BrebD1PFjvoqDv6WJqtPWduBsuoIKtYpKus265VvE7rv0vYKH4ezWoC08x8orxDC6h15hRvPAkLuECKpiMSvfozf64hev+K7WeorWNl30L1jZdwSVcQAUPZw4ygnOFV5BUW52RvAbCiXnO6F7i7Ki3OzvoC87+xPtn8Eb+5mtGHpmOybQMeuHXFP3eO0Xnu9/gbqomkOyrOn6hgqPJ1YzgsNLEfHeHTN958yPuhy9sG4yzvZBtCrLTcKk4Ncb557RNrcDS/MQvVHBEWewROV4iylJnjR7GfXFHoScE6mJ2PXaH/GY+68fN/hoszU/8QgUPJuaiUboSdOMpnY5JyGdyzV2T0gK4L9+0bzbK5l9ik+fg4488QsvFOPGEtuGR3yO4mZFHhGLINXdNNLUWl/gGS62XYLKeMiN17QUwe7+AncmBrRpg9g2AtuESU5O/+w53wwVUcCy9mZFXaiNFro3+Hro/DUL3ZkD/5BtlUwlYar0E69uuMvKst0O4hG603DWa04ZHqGBFPVKRYCrWCamJJJtxCYMf0fVGXXKakWf/KOASeo0Z5U6bWoHXVT/xCxWsGz0TTtGhpsNMDXnxUAmNKFld2saOYPKIhMAjWF3WjkuqBkvzE79QweQokjzzjsortckKdc1kBKu527ivkjSiYH3/LXb6Xd8J5osBsLPGrzX45VfPGqwf6MbdVA2W5id+GTuLJocbg4k5jESc0Sk6nt5Bb4rxaOQpmgh0y6skpA2PMK8LdeMxhJVFHrHukKm5f8p5z6YKp9EpODtp+v63hEx3SA2p5RVGMIEcYKS1NvqynxxRklOtoeQqGM4ccm6AR2DbfL4XLYUdy4Bxrhf0vV2gtpz588J/RQc9qiSnXcXoCG7GFR7BErGQggVHChYcKVhwpGDBkYIFRwoWHClYcKRgwZGCBUcKFhwpWHB+AtgFvOlqEysEAAAAAElFTkSuQmCC',
-) // 验证码图片Base64字符串
+// 验证码图片Base64字符串
+const captchaBase64 = ref('')
+// 获取验证码
+function getCaptcha() {
+  AuthAPI.getCaptcha().then((res) => {
+    loginData.value.captchaKey = res.captchaKey
+    captchaBase64.value = res.captchaBase64
+  })
+}
+
+const loading = ref(false) // 按钮 loading 状态
+
+// 登录提交
+function handleLoginSubmit() {
+  loginFormRef.value?.validate((valid) => {
+    if (valid) {
+      // loading.value = true
+      // 登录操作
+      console.log('尝试登录')
+
+      userStore
+        .login(loginData.value)
+        .then(async (data) => {
+          // 登录成功以后，获取用户的一些相关信息
+          const userInfo = await userStore.getUserInfo()
+          console.log('userInfo', userInfo)
+          // parseRedirect()
+          console.log('data', data)
+          router.push('/test')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+        .finally(() => {
+          loading.value = false
+        })
+    }
+  })
+}
+
+const route = useRoute()
+function parseRedirect() {
+  console.log('route.query', route.query)
+}
+
+onMounted(() => {
+  getCaptcha()
+  // localStorage.clear()
+})
 </script>
 
 <template>
@@ -45,7 +119,7 @@ const captchaBase64 = ref(
       </div>
 
       <div class="login-form">
-        <el-form :model="loginData" ref="loginFormRef">
+        <el-form :model="loginData" ref="loginFormRef" :rules="loginRules">
           <div class="form-title">
             <h2>vue3-element-admin</h2>
           </div>
@@ -97,7 +171,7 @@ const captchaBase64 = ref(
                 class="h-[48px]"
                 :placeholder="$t('login.captchaCode')"
               />
-              <el-image :src="captchaBase64" class="captcha-img" />
+              <el-image :src="captchaBase64" class="captcha-img" @click="getCaptcha" />
             </div>
           </el-form-item>
 
@@ -112,7 +186,7 @@ const captchaBase64 = ref(
           </div>
 
           <!-- 登录按钮 -->
-          <el-button type="primary" size="large" class="w-full">
+          <el-button type="primary" size="large" class="w-full" @click.prevent="handleLoginSubmit" :loading="loading">
             {{ $t('login.login') }}
           </el-button>
 
@@ -249,6 +323,11 @@ const captchaBase64 = ref(
   .el-input__wrapper {
     padding: 0;
     box-shadow: none;
+
+    &.is-focus,
+    &:hover {
+      box-shadow: none;
+    }
   }
 }
 

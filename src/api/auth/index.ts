@@ -7,6 +7,16 @@ const AUTH_BASE_URL = '/api/v1/auth'
 const AuthAPI = {
   /** 登录接口  data参数来自于 登录表单的输入 */
   login(data: LoginData) {
+    // 这里new FormData()，然后又把data的值一个个添加进行的原因可能是因为后端接口要求 请求体为 multipart/form-data 格式
+    /*
+      {
+      url: AUTH_BASE_URL + '/login',
+      method: 'post', // 请求方式
+      data: data, // 请求体参数
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    */
     const formData = new FormData()
     formData.append('username', data.username)
     formData.append('password', data.password)

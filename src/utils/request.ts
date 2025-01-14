@@ -17,15 +17,23 @@ const service = axios.create({
 // 请求拦截器,如果有token，就添加
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const accessToken = getToken() //获取访问token
-    // 如果 Authorization 不是 no-auth，同时token存在，则携带 Token
+    const accessToken = getToken()
+
+    /*
+      如果Authorization字段不设置，就没有这个属性，也就是undefined ，也不会被发送到服务器
+      1. 不设置，意味着这个请求不需要 携带 Token，比如登录、刷新 Token 等接口，谁都可以来访问
+      2，设置为‘Bearer tokenxxxxx’ ，那就说明这个接口需要token才能访问
+      ** 这个系统里面token基本都是存在的，只是会过期，但是过不过期要访问接口以后，才能知道
+    */
+    // 如果 accessToken是存在的，同时这个接口也是需要 token 的接口，才会添加 Authorization 字段
     if (config.headers.Authorization !== 'no-auth' && accessToken) {
       config.headers.Authorization = accessToken
     }
-    // 如果 Authorization 设置为 no-auth，则不携带 Token，用于登录、刷新 Token 等接口，此时accessToken也不存在，可以一起处理
+    // 如果说接口不需要token，不需要认证，直接删除Authorization字段就行，那也就不用关心token存在还是不存在
     else {
       delete config.headers.Authorization
     }
+    console.log('axios,config', config)
     return config
   },
   (error) => {
