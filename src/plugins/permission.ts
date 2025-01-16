@@ -56,7 +56,7 @@ export function setupPermission() {
             console.error(error)
             // 路由加载失败，重置 token 并重定向到登录页
             await useUserStore().clearUserData()
-            // redirectToLogin(to, next);
+            redirectToLogin(to, next)
             NProgress.done()
           }
         }
@@ -71,7 +71,7 @@ export function setupPermission() {
       else {
         console.log('未登录，被路由拦截器拦截，重定向到登录页')
         // 不在白名单，重定向到登录页
-        // redirectToLogin(to, next)
+        redirectToLogin(to, next)
         router.push({ path: '/' })
         NProgress.done()
       }

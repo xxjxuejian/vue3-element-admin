@@ -75,12 +75,13 @@ function handleLoginSubmit() {
       userStore
         .login(loginData.value)
         .then(async (data) => {
-          // 登录成功以后，获取用户的一些相关信息
-          const userInfo = await userStore.getUserInfo()
-          console.log('userInfo', userInfo)
-          // parseRedirect()
-          console.log('data', data)
-          router.push('/test')
+          await userStore.getUserInfo()
+          // 需要在路由跳转前加载字典数据，否则会出现字典数据未加载完成导致页面渲染异常
+          // await dictStore.loadDictionaries()
+          // 跳转到登录前的页面
+          // console.log("route", route);
+          const { path, queryParams } = parseRedirect()
+          router.push({ path: path, query: queryParams })
         })
         .catch((err) => {
           console.log(err)
@@ -91,10 +92,25 @@ function handleLoginSubmit() {
     }
   })
 }
-
+import { LocationQuery, useRoute } from 'vue-router'
 const route = useRoute()
-function parseRedirect() {
-  console.log('route.query', route.query)
+// 解析路由参数，回到之前的页面
+function parseRedirect(): {
+  path: string
+  queryParams: Record<string, string>
+} {
+  const query: LocationQuery = route.query
+  const redirect = (query.redirect as string) ?? '/'
+
+  const url = new URL(redirect, window.location.origin)
+  const path = url.pathname
+  const queryParams: Record<string, string> = {}
+
+  url.searchParams.forEach((value, key) => {
+    queryParams[key] = value
+  })
+
+  return { path, queryParams }
 }
 
 onMounted(() => {
