@@ -8,7 +8,7 @@ import type { App } from 'vue'
 所以内部想到使用store的代码，比如const appStore = useAppStore()  等代码都不能正常执行
 那么在这些文件中，如果确实需要使用store，怎么办？
 */
-// import { setupDirective } from "@/directive";
+import { setupDirective } from '@/directive'
 import { setupStore } from '@/stores'
 import { setupI18n } from '@/lang'
 import { setupRouter } from '@/router'
@@ -20,8 +20,8 @@ import { setupPermission } from './permission'
 export default {
   install(app: App<Element>) {
     // 自定义指令(directive)
-    // setupDirective(app);
-    // 路由(router)
+    setupDirective(app)
+    // 路由(router) ,静态路由
     setupRouter(app)
     // 状态管理(store)
     setupStore(app)
@@ -29,7 +29,7 @@ export default {
     setupI18n(app)
     // Element-plus图标
     setupElIcons(app)
-    // 路由守卫
+    // 路由守卫 ，设置路由拦截器
     setupPermission()
     // 初始化 WebSocket
     // webSocketManager.setupWebSocket();
